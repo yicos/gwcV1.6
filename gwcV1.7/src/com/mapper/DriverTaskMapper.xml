@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<mapper namespace="com.mapper.DriverTaskMapper"> 
+	
+	<!-- 查询一条记录 --> 
+	<select id="selectEntityList" 
+	resultType="com.model.DriverTask">
+		select * from (
+			select id,t.upload_degree,
+				t.exception_msg,t.success_flag,
+				t.mobile as Cert_No,
+				t.dept_id as Org_ID,
+				7 as Platform_ID,
+				t.driver_name as Name,
+				t.mobile as Phone,
+				t.driver_id as ID_Card,
+				to_char(t.effective_time,'yyyyMMdd') as Expiry_Date,
+				t.authority as Authority,
+				null as Address,
+				t.telephone as Home_Phone,
+				1 as Sex,
+				1 as Compiling_Attributes,
+				null as Labor_Contract_Exp,
+				t.licence_type as License_Type,
+				t.licence_id as License_Number,
+				t.flag
+			from bdm_driver_task t order by t.date_create_time desc,t.upload_degree asc) tt
+			where rownum between 1 and 2000
+	</select> 
+	  
+	 
+	 <!--批量删除  --> 
+	 <delete id="deleteEntityByIds" parameterType="java.util.List"> 
+	 delete from bdm_driver_task where id in (
+		<foreach item="id" collection="ids"  separator=",">
+		 #{id}
+		</foreach>
+	 )	
+	  </delete> 
+	 <update id="updateEntityByEntity" parameterType="java.util.Map">
+	 	update bdm_driver_task t set 
+			 		t.upload_degree=t.upload_degree+1,
+			 		t.exception_msg=#{entity.exceptionMsg}
+	    where t.id=#{entity.id}
+	 </update> 
+	  
+</mapper>

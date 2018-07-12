@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<mapper namespace="com.mapper.CarRuntimeInfoTaskMapper"> 
+	
+	<!-- 查询车辆 --> 
+	<select id="selectEntityList" resultType="com.model.CarRuntimeInfoTask">
+	select * from (
+		select
+			id,t.upload_degree,t.exception_msg,t.success_flag,
+			decode(length(c.terminal_id),7,('0'||c.terminal_id),c.terminal_id) as terminal_id,
+			t.car_number as plate_no ,
+			t.lon as longitude,
+			t.lat as latitude,
+			to_char(t.gnss_time,'yyyyMMddHH24miss') as loc_time,
+			t.vel as speed,
+			1 as Is_Position,
+			t.dir as direction,
+			t.mileage as sub_mileage
+		from bam_carruntime_info_task t
+		left join bdm_car_info c on c.car_number=t.car_number
+		where 1=1 and gnss_time &lt; sysdate+1
+		<if test="map.msgThreadType!=null">
+			<if test="map.msgThreadType!=''">
+				and t.msg_thread_type=#{map.msgThreadType}
+			</if>
+		</if>
+		order by t.date_create_time desc,t.upload_degree asc) tt
+		where rownum between 1 and 1000
+	</select> 
+	 <!--批量删除  --> 
+	 <delete id="deleteEntityByIds" parameterType="java.util.List"> 
+	 delete from bam_carruntime_info_task where id in (
+		<foreach item="id" collection="ids"  separator=",">
+		 #{id}
+		</foreach>
+	 )	
+	  </delete> 
+		 <update id="updateEntityByEntity" parameterType="java.util.Map">
+	 	update bam_carruntime_info_task t set 
+			 		t.upload_degree=t.upload_degree+1,
+			 		t.exception_msg=#{entity.exceptionMsg}
+	    where t.id=#{entity.id}
+	 	  </update>
+	  
+</mapper>
