@@ -45,7 +45,7 @@ public class VehicleInfosRunable implements Runnable {
 		try {
 			//LogListener.debug(this.getClass(), AppConstant.NAME_CMD_VEHICLEINFOS, "开始任务");
 
-			// 获取要发送的消息队列
+			// 获取要发送的消息队列  
 			session = sessionFactory.openSession();
 			carInfoTaskMapper = session.getMapper(CarInfoTaskMapper.class);
 			carInfoTasks = carInfoTaskMapper.selectCarInfoTaskList();
