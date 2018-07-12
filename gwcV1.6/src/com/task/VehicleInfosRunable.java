@@ -30,7 +30,6 @@ import net.sf.json.JSONObject;
  * @author zhi.yi
  */
 public class VehicleInfosRunable implements Runnable {
-	private static Logger log = Logger.getLogger(VehicleInfosRunable.class);
 	private SqlSessionFactory sessionFactory = null;
 
 	public VehicleInfosRunable(SqlSessionFactory sessionFactory) {
