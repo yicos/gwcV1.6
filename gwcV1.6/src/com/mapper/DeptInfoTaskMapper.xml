@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mapper.DeptInfoTaskMapper">
+
+	<!-- 查询一条记录 -->
+	<select id="selectEntityList"
+		resultType="com.model.DeptInfoTask">
+		 select r.dept_relation_id,
+		       r.dept_level,
+		       r.parent_dept_id,
+		       tt.*
+		  from (select id,
+		               t.upload_degree,
+		               t.exception_msg,
+		               t.success_flag,
+		               7 as Platform_ID,
+		               t.dept_info_id as Org_ID,
+		               t.dept_name as Name,
+		               t.dept_name as Short_Name,
+		               t.manager_mobile as Phone,
+		               t.remark as Memo,
+		               '400101' as Area_Code,
+		               '400101' as Area_Name,
+		               3 as Area_Level,-- 县、区
+		               t.flag
+		          from BDM_DEPT_INFO_task t
+		         order by t.date_create_time desc,t.upload_degree asc) tt
+		  left join bam_dept_relation r
+		    on r.child_dept_id = tt.Org_ID
+		    where rownum between 1 and 2000
+	</select>
+	<select id="selectParentDeptInfoByParentDeptId"
+		resultType="com.model.DeptInfoTask">
+		select t.dept_name,tt.* from (select t.dept_level, t.parent_dept_id, t.child_dept_id
+		  from bam_dept_relation t
+			 where 1=1 and rownum=1 
+			  and t.child_dept_id = #{parentDeptId}
+			 ) tt
+		 left join BDM_DEPT_INFO t on tt.child_dept_id=t.Dept_Info_Id
+	</select>
+
+
+	<!--批量删除 -->
+	<delete id="deleteEntityByIds" parameterType="java.util.List">
+		delete from bdm_dept_info_task where id in (
+		<foreach item="id" collection="ids" separator=",">
+			#{id}
+		</foreach>
+		)
+	</delete>
+	<update id="updateEntityByEntity" parameterType="java.util.Map">
+		update bdm_dept_info_task t set
+		t.upload_degree=t.upload_degree+1,
+		t.exception_msg=#{entity.exceptionMsg}
+		where t.id=#{entity.id}
+	</update>
+
+</mapper>

@@ -1,0 +1,14 @@
+[ERROR] [2018-07-10 16:33:38] com.alibaba.druid.pool.DruidDataSource - testWhileIdle is true, validationQuery not set
+  [ERROR] [2018-07-10 16:33:40] com.task.TasKExecutors - {logtype=3, loginfo=全部任务开始, serverno=com.task.TasKExecutors, servername=系统工具}
+  [ERROR] [2018-07-10 16:33:45] com.task.GetTaxiModelAndTaxiTypeRunable - {logtype=2, loginfo=操作失败:Read timed out, serverno=com.task.GetTaxiModelAndTaxiTypeRunable, servername=$车辆信息(批量)$}
+  [ERROR] [2018-07-10 16:33:45] com.alibaba.druid.pool.DruidDataSource - testWhileIdle is true, validationQuery not set
+  [ERROR] [2018-07-10 16:33:50] com.task.TasKExecutors - {logtype=3, loginfo=全部任务停止, serverno=com.task.TasKExecutors, servername=系统工具}
+  [ERROR] [2018-07-10 16:33:50] com.task.TasKExecutors - {logtype=3, loginfo=全部任务开始, serverno=com.task.TasKExecutors, servername=系统工具}
+  [ERROR] [2018-07-10 16:55:56] com.task.TasKExecutors - {logtype=3, loginfo=全部任务停止, serverno=com.task.TasKExecutors, servername=系统工具}
+  [ERROR] [2018-07-10 17:18:39] com.alibaba.druid.pool.DruidDataSource - testWhileIdle is true, validationQuery not set
+  [ERROR] [2018-07-10 17:18:41] com.task.TasKExecutors - {logtype=3, loginfo=全部任务开始, serverno=com.task.TasKExecutors, servername=系统工具}
+  [ERROR] [2018-07-10 17:18:47] com.task.GetTaxiModelAndTaxiTypeRunable - {logtype=2, loginfo=操作失败:Read timed out, serverno=com.task.GetTaxiModelAndTaxiTypeRunable, servername=$车辆信息(批量)$}
+  [ERROR] [2018-07-10 17:18:47] com.alibaba.druid.pool.DruidDataSource - testWhileIdle is true, validationQuery not set
+  [ERROR] [2018-07-10 17:18:50] com.task.TasKExecutors - {logtype=3, loginfo=全部任务停止, serverno=com.task.TasKExecutors, servername=系统工具}
+  [ERROR] [2018-07-10 17:18:50] com.task.TasKExecutors - {logtype=3, loginfo=全部任务开始, serverno=com.task.TasKExecutors, servername=系统工具}
+  

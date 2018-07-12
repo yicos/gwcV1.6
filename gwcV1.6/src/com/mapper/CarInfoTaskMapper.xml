@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<mapper namespace="com.mapper.CarInfoTaskMapper"> 
+	
+	<!-- 查询车辆 --> 
+	<select id="selectCarInfoTaskList" resultType="com.model.CarInfoTask"> 
+		select * from (
+			select 
+		       t.upload_degree,t.exception_msg,t.success_flag,
+			   t.id,t.car_number as plate_no,
+		       7 as platform_id,
+		       t.car_info_id as taxi_model_id,
+		       t.dept_info_id as org_id,
+		       null as vehicle_dimensions,
+		       t.car_chassis_number as vin_no,
+		       null as engine_no,
+		       decode(sign(nvl(obligate1,0)-10),1,obligate1,-1,obligate1*1000,obligate1) as displacement,
+		       'Z' as color,
+		       1 as gearbox,-- 波箱：1 自动波；2 手动波
+		       to_char(t.create_time,'yyyyMMddHH24miss') as launch_date,
+		       decode(t.terminal_id, 0, 0, 1) as release_status,
+		       decode(length(t.terminal_id),7,('0'||t.terminal_id),t.terminal_id) as terminal_id,
+		       /*decode(t.car_use_type,
+		              1,
+		              '其他用车',
+		              2,
+		              '机要通信应急用车',
+		              3,
+		              '执法执勤用车',
+		              4,
+		              '特种专业技术用车',
+		              5,
+		              '行政执法执勤',
+		              '其他用车') as po_vehicle_use_nature,*/
+		       -- 1－其他用车；2－机要通信应急用车；3－执法执勤用车(警车除外)；4－特种专业技术用车'
+		       -- 1 机要通信用车；2应急用车(重大)；3执法执勤用车；4特种专业技术用车(非执法执勤);5行政执法执勤；6其他
+		       -- decode(t.car_use_type,1, 6, 2, 1, 3, 3, 4, 4, 5, 5, 6) as Vehicle_Use_Nature, 
+		       decode(t.car_use_type,1, 6, 2, 1, 3, 3, 4, 4, 5, 5, 6) as po_vehicle_use_nature, 
+		       0 as Identification, 0 as IsAccess_Platform, decode(t.car_status, 1, 0, 0, 1) as Vehicle_Status, 
+		       t.db_department as Allocation_Unit, t.db_number as Allocation_Number, to_char(t.install_time,'yyyyMMdd') as Terminal_Installation_Date, 
+		       '海格' as Supplier, 0 as Driving_Licence, t.car_owner as Owner, t.real_mileage as Accumulated_Mileage, 
+		       t.contact_person_name as Contact_Name, t.contact_person_tel as Office_Phone, t.contact_person_dept as Department, 
+		       t.contact_person_mobile as Contact_Mobile, t.contact_person_fax as Fax, t.contact_person_title as duty, t.flag
+		       
+		       FROM bdm_car_info_task t where t.dept_info_id!=1167 and t.dept_info_id!=1267 
+		       order by t.date_create_time desc,t.upload_degree asc )tt
+		       where rownum between 1 and 2000
+	</select> 
+	<!-- 查询终端 --> 
+	<select id="selectTerminalInfoTaskList" resultType="com.model.TerminalInfoTask"> 
+			select * from (
+				select
+				id,t.upload_degree,t.exception_msg,t.success_flag,
+				7 as platform_id,
+				decode(length(t.terminal_id),7,('0'||t.terminal_id),t.terminal_id) as terminal_id,
+				'ZH/T-2' as type_model,
+				nvl(t.sim_number,decode(length(t.terminal_id),7,('0'||t.terminal_id),t.terminal_id)) as sim_no,
+				0 as sim_type,-- sim 卡类型（0-移动，1-联通，2-电信）
+				1 as factory,-- 终端厂商：1：海格，2：亿程，3：
+				t.flag
+				from bdm_car_info_task t 
+				where (t.dept_info_id=1167 or t.dept_info_id=1267) order by t.date_create_time desc,t.upload_degree asc)tt
+				where rownum between 1 and 1000
+	</select> 
+	  
+	 
+	 <!--批量删除  --> 
+	 <delete id="deleteCarInfoTaskByIds" parameterType="java.util.List"> 
+	 delete from bdm_car_info_task where id in (
+		<foreach item="id" collection="ids"  separator=",">
+		 #{id}
+		</foreach>
+	 )	
+	  </delete> 
+		 <update id="updateEntityByEntity" parameterType="java.util.Map">
+	 	update bdm_car_info_task t set 
+			 		t.upload_degree=t.upload_degree+1,
+			 		t.exception_msg=#{entity.exceptionMsg}
+	    where t.id=#{entity.id}
+	 </update>   
+		<update id="updateTerminalInfoTask" parameterType="java.util.Map">
+	 	update bdm_car_info_task t set 
+			 		t.upload_degree=t.upload_degree+1,
+			 		t.exception_msg=#{entity.exceptionMsg}
+	    where t.id=#{entity.id}
+	 </update>     
+</mapper>

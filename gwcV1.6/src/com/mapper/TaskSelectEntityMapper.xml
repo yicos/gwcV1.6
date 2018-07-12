@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<mapper namespace="com.mapper.TaskSelectEntityMapper"> 
+	
+	<!-- 查询任务 --> 
+	<select id="TaskSelectMapper" resultType="com.model.TaskSelectEntity"> 
+		select  rownum as seq ,tt.* from (
+			select 
+			t.flag,'车辆信息(批量)' as cmd,t.upload_degree,t.exception_msg 
+			from bdm_car_info_task t where t.dept_info_id!=1167 and t.dept_info_id!=1267
+			union all 
+			select 
+			t.flag,'位置终端信息(批量)' as cmd,t.upload_degree,t.exception_msg 
+			from bdm_car_info_task t  where (t.dept_info_id=1167 or t.dept_info_id=1267)
+			union all 
+			select 
+			t.flag,'组织机构信息' as cmd,t.upload_degree,t.exception_msg 
+			from BDM_DEPT_INFO_task t 
+			union all 
+			select 
+			null as flag,'位置数据接入(批量)' as cmd,t.upload_degree,t.exception_msg 
+			from bam_carruntime_info_task t
+			union all 
+			select 
+			t.flag,'司机信息(批量)' as cmd,t.upload_degree,t.exception_msg 
+			from bdm_driver_task t )
+			tt
+		where 1=1 
+		<if test="map.cmd!=null">
+			<if test="map.cmd!=''">
+				and cmd like   concat(concat('%',#{map.cmd}),'%')
+			</if>
+		</if>
+		<if test="map.exceptionMsg!=null">
+			<if test="map.exceptionMsg!=''">
+				and exception_msg like  concat(concat('%',#{map.exceptionMsg}),'%')
+			</if>
+		</if>
+		order by cmd,upload_degree asc
+		
+	</select>   
+</mapper>
