@@ -1,0 +1,10 @@
+POSTURL_BASIC=http://19.15.246.108/Management/BasicDataManagement.ashx
+POSTURL_LOCATION=http://19.15.246.108/Management/LocationDataManagement.ashx
+
+POSTURL_BASIC=http://19.15.246.114/Management/BasicDataManagement.ashx
+POSTURL_LOCATION=http://19.15.246.114/Management/LocationDataManagement.ashx
+
+
+172.16.222.19
+CLJKDB
+Hgtag@0716
